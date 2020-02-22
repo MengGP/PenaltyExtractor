@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Страница запроса информации</title>
+</head>
+
+<body>
+<h1>Страница запроса информации.</h1>
+<p>--------------------------------------------------------</p>
+
+<!-- <input type="text" list=""> -->
+
+<p th:text="${tString}"/>
+
+<form th:action="@{/requestPoints}">
+    <input type="text" name="optionOne" list="optList"/>
+    <datalist id="optList">
+        <option th:each="iter : ${optionList}" th:value="${iter}"/>
+    </datalist>
+    <button> Получить </button>
+
+</form>
+
+</body>
+</html>
