@@ -1,6 +1,8 @@
 package penaltyextractor.boot;
 
 import javafx.application.Application;
+import org.flywaydb.core.Flyway;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +10,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import java.util.HashMap;
 
@@ -19,7 +22,7 @@ import java.util.HashMap;
         "penaltyextractor.services"
 } )
 
-public class PenaltyExtractorApp{
+public class PenaltyExtractorApp implements CommandLineRunner {
 
     public static void main(String[] args) {
         // SpringApplication.run(PenaltyExtractorApp.class, args);
@@ -32,6 +35,24 @@ public class PenaltyExtractorApp{
                 .run(args);
     } // end_main
 
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        migrateDB();
+    } // end_run
+
+    private void migrateDB() {
+        Flyway flyway = Flyway.configure().dataSource(
+                "jdbc:h2:file:D:/Work/SoftDev/CBRF/PenaltyExtractor/testDB",
+                "sa",
+                "")
+                .load();
+        flyway.migrate();
+    }
 
 
 } // end_class
