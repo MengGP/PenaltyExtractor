@@ -158,4 +158,32 @@ public class dbHelperSpringJDBC {
         return penaltiesByDriver;
     }
 
+    public List<TopPenalty> readTopPenalties(int penaltiesNumber) {
+        String sqlQuery = "SELECT cnt, clause FROM " +
+                    "PENALTY_CATALOG, " +
+                    "(SELECT PENALTY_ID, COUNT(PENALTY_ID) as cnt FROM " +
+                        "ISSUED_PENALTIES " +
+                        "group by PENALTY_ID " +
+                        "order by cnt desc limit ? " +
+		            ") as top_penalties " +
+                "where " +
+                    "PENALTY_CATALOG.id = top_penalties.PENALTY_ID " +
+                "order by top_penalties.cnt desc;";
+        List<TopPenalty> topPenalties = jdbcTemplate.query(
+                sqlQuery,
+                new RowMapper<TopPenalty>() {
+                    @Override
+                    public TopPenalty mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return new TopPenalty(
+                                rs.getInt("cnt"),
+                                rs.getString("clause")
+                        );
+                    }
+                },
+                penaltiesNumber
+        );
+
+        return topPenalties;
+    }
+
 } // end_class

@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import penaltyextractor.dao.Penalty;
+import penaltyextractor.dao.TopPenalty;
 
 import java.util.ArrayList;
 
@@ -51,6 +52,16 @@ public class PenaltiesQuery {
         }
 
         return "penaltiesPage";
+    } // end_method
+
+    @RequestMapping("/topPenalties")
+    public String topPegaltiesPageGenerate(Model model) {
+
+        ArrayList<TopPenalty> topPenalties
+                = (ArrayList<TopPenalty>) dbHelperSpringJDBC.readTopPenalties(5);
+        model.addAttribute("topPenalties", topPenalties);
+
+        return "topPenaltiesPage";
     } // end_method
 
 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Страница вывода информации</title>
+</head>
+<body>
+
+<h1 th:inline="text">Топ 5 выписываемых штрафов:</h1>
+
+<form th:action="@{actionPage}">
+    <button>Назад</button>
+</form>
+
+<p>--------------------------------------------------------</p>
+
+<table border="1" bordercolor="grey">
+    <tr>
+        <th>Количество</th>
+        <th>Штраф</th>
+    </tr>
+    <tr th:each="iterator : ${topPenalties}">
+        <td th:text="${iterator.getCount()}"></td>
+        <td th:text="${iterator.getClause()}"></td>
+    </tr>
+
+</table>
+
+<p>--------------------------------------------------------</p>
+
+</body>
+</html>
