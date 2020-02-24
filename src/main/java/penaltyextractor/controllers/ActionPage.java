@@ -1,5 +1,6 @@
 package penaltyextractor.controllers;
 
+import org.h2.jdbc.JdbcSQLSyntaxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +10,7 @@ import penaltyextractor.dao.Driver;
 import penaltyextractor.dao.RegisteredVehicle;
 import penaltyextractor.dao.dbHelperSpringJDBC;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Controller
@@ -28,15 +30,6 @@ public class ActionPage {
             @RequestParam(value = "driverForFilter", required = false) String driverForFilter,
             Model model) {
 
-        // тестовый блок
-        String tString = "It's a string ";
-        String[] optionList = {
-            "1 option 1", "11 option 2", "111 option 3", "2 option 4", "22 option 5", "3 option 6"
-        };
-        model.addAttribute("optionList", optionList);
-        model.addAttribute("tString", tString);
-        // ---
-
         // Получаем список водителей и передаем в список на форму
         ArrayList<Driver> drivers = (ArrayList<Driver>) dbHelperSpringJDBC.readAllDrivers();
         String[] optListDrivers = new String[ drivers.size() ];
@@ -45,7 +38,8 @@ public class ActionPage {
         }
         model.addAttribute("optListDrivers", optListDrivers);
 
-        if ( driverForFilter == null ) {
+        if (driverForFilter == null) driverForFilter="";
+        if ( driverForFilter.length() == 0) {
             // Получаем список гос.номеров и передаем в список на форму
             ArrayList<RegisteredVehicle> registeredVehicles =
                     (ArrayList<RegisteredVehicle>) dbHelperSpringJDBC.readAllRegisteredVehicles();

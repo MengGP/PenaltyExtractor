@@ -8,21 +8,6 @@
 <body>
 <h1>Страница запроса информации.</h1>
 <p>--------------------------------------------------------</p>
-
-<!-- <input type="text" list=""> -->
-
-<p th:text="${tString}"/>
-
-<form th:action="@{/requestPoints}">
-    <input type="text" name="optionOne" list="optList"/>
-    <datalist id="optList">
-        <option th:each="iter : ${optionList}" th:value="${iter}"/>
-    </datalist>
-    <button> Получить </button>
-
-</form>
-
-<p>--------------------------------------------------------</p>
 <p> Запрос штрафов: </p>
 
 <datalist id="optListDrivers">
@@ -95,7 +80,7 @@
         <td>
             <form
                     id="penaltyQuery"
-                    th:action="@{/actionPage}">
+                    th:action="@{/penaltiesPage}">
                 <button> Получить штрафы по заданным параметрам </button>
             </form>
         </td>

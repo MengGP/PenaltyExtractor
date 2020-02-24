@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Страница вывода информации</title>
+</head>
+<body>
+
+<h1 th:inline="text">Выписаные штрафы согласно условиям поиска:</h1>
+
+<p>Поиск по:</p>
+<p th:text="${driverForPenaltyQuery}"/>
+<p th:text="${regNumForPenaltyQuery}"/>
+
+<p>--------------------------------------------------------</p>
+
+<table border="1" bordercolor="grey">
+    <tr>
+        <th>Дата</th>
+        <th>Водитель</th>
+        <th>Гос.номер</th>
+        <th>Марка</th>
+        <th>Модель</th>
+        <th>Статья</th>
+        <th>Стоимость</th>
+    </tr>
+    <tr th:each="iterator : ${penalties}">
+        <td th:text="${iterator.getDate()}"></td>
+        <td th:text="${iterator.getDriverName()}"></td>
+        <td th:text="${iterator.getVehicleRegNumber()}"></td>
+        <td th:text="${iterator.getVehicleMark()}"></td>
+        <td th:text="${iterator.getVehicleModel()}"></td>
+        <td th:text="${iterator.getPenaltyClause()}"></td>
+        <td th:text="${iterator.getPenaltyCost()}"></td>
+    </tr>
+
+</table>
+
+<p>--------------------------------------------------------</p>
+<form th:action="@{actionPage}">
+    <button>Назад</button>
+</form>
+
+
+</body>
+</html>
