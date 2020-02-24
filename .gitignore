@@ -5,3 +5,7 @@ gradle/
 gradlew
 gradlew.bat
 !/.gitignore
+/testDB1.mv.db
+/testDB1.trace.db
+/testDB.mv.db
+/PenaltyDB.mv.db

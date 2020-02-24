@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Страница запроса информации</title>
+</head>
+
+<body>
+<h1>Страница запроса информации.</h1>
+<p>--------------------------------------------------------</p>
+
+<!-- <input type="text" list=""> -->
+
+<p th:text="${tString}"/>
+
+<form th:action="@{/requestPoints}">
+    <input type="text" name="optionOne" list="optList"/>
+    <datalist id="optList">
+        <option th:each="iter : ${optionList}" th:value="${iter}"/>
+    </datalist>
+    <button> Получить </button>
+
+</form>
+
+<p>--------------------------------------------------------</p>
+<p> Запрос штрафов: </p>
+
+<datalist id="optListDrivers">
+    <option th:each="iter : ${optListDrivers}" th:value="${iter}"/>
+</datalist>
+
+<datalist id="optListRegNum">
+    <option th:each="iter : ${optListRegNum}" th:value="${iter}"/>
+</datalist>
+
+<table>
+    <tr>
+        <th>По водителю:</th>
+        <th></th>
+        <th>По гос. номеру</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td> <!-- empty --> </td>
+        <td> <!-- empty --> </td>
+        <td>
+            <input
+                    type="text"
+                    name="driverForFilter"
+                    list="optListDrivers"
+                    placeholder="Полное имя водителя"
+                    th:value="${retDriverForFilter}"
+                    form = "filterByDriver"
+            />
+
+        </td>
+        <td>
+            <form id="filterByDriver" th:action="@{/actionPage}">
+                <button>Фильтр авто по водителю</button>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input
+                    type="text"
+                    name="driverForPenaltyQuery"
+                    list="optListDrivers"
+                    placeholder="Полное имя водителя"
+                    th:value="${retDriverForPenaltyQuery}"
+                    form = "penaltyQuery"
+            />
+        </td>
+        <td>
+            <form th:action="@{/cleanActionPage}">
+                <button>Очистить</button>
+            </form>
+        </td>
+        <td>
+            <input
+                    type="text"
+                    name="regNumForPenaltyQuery"
+                    list="optListRegNum"
+                    placeholder="Гос. номер автомобиля"
+                    form="penaltyQuery"
+            />
+        </td>
+        <td>
+            <form th:action="@{/cleanActionPage}">
+                <button>Очистить</button>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <form
+                    id="penaltyQuery"
+                    th:action="@{/actionPage}">
+                <button> Получить штрафы по заданным параметрам </button>
+            </form>
+        </td>
+        <td> <!-- empty --> </td>
+        <td> <!-- empty --> </td>
+        <td> <!-- empty --> </td>
+    </tr>
+    <tr>
+        <td>
+            <form th:action="@{/topFivePenlaties}">
+                <button> Топ 5 выдаваемых штрафов </button>
+            </form>
+        </td>
+        <td> <!-- empty --> </td>
+        <td> <!-- empty --> </td>
+        <td> <!-- empty --> </td>
+    </tr>
+</table>
+
+</body>
+</html>
