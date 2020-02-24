@@ -1,6 +1,5 @@
 package penaltyextractor.controllers;
 
-import org.h2.jdbc.JdbcSQLSyntaxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,9 +9,12 @@ import penaltyextractor.dao.Driver;
 import penaltyextractor.dao.RegisteredVehicle;
 import penaltyextractor.dao.dbHelperSpringJDBC;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
+/*
+    Контроллер
+        отвечающий за работы со страниццей запроса информации
+ */
 @Controller
 public class ActionPage {
 
@@ -38,27 +40,25 @@ public class ActionPage {
         }
         model.addAttribute("optListDrivers", optListDrivers);
 
+        ArrayList<RegisteredVehicle> registeredVehicles;
+        // Проверяем - если не задан водитель для фильтрации авто, выводим полный список, иначе фильтруем
         if (driverForFilter == null) driverForFilter="";
         if ( driverForFilter.length() == 0) {
             // Получаем список гос.номеров и передаем в список на форму
-            ArrayList<RegisteredVehicle> registeredVehicles =
-                    (ArrayList<RegisteredVehicle>) dbHelperSpringJDBC.readAllRegisteredVehicles();
-            String[] optListRegNum = new String[registeredVehicles.size()];
-            for (int i = 0; i < registeredVehicles.size(); i++) {
-                optListRegNum[i] = registeredVehicles.get(i).getVehicleRegNumber();
+            registeredVehicles = (ArrayList<RegisteredVehicle>) dbHelperSpringJDBC.readAllRegisteredVehicles();
             }
-            model.addAttribute("optListRegNum", optListRegNum);
-        } else {
+        else {
             // Получаем список гос.номеров - автомобилей одного видителя - и передаем в список на форму
-            ArrayList<RegisteredVehicle> registeredVehicles =
-                    (ArrayList<RegisteredVehicle>) dbHelperSpringJDBC.readRegisteredVehiclesFilterByDriver(driverForFilter);
-            String[] optListRegNum = new String[registeredVehicles.size()];
-            for (int i = 0; i < registeredVehicles.size(); i++) {
-                optListRegNum[i] = registeredVehicles.get(i).getVehicleRegNumber();
-            }
+            registeredVehicles = (ArrayList<RegisteredVehicle>) dbHelperSpringJDBC.readRegisteredVehiclesFilterByDriver(driverForFilter);
             model.addAttribute("retDriverForFilter", driverForFilter);
-            model.addAttribute("optListRegNum", optListRegNum);
         }
+
+        String[] optListRegNum = new String[registeredVehicles.size()];
+        for (int i = 0; i < registeredVehicles.size(); i++) {
+            optListRegNum[i] = registeredVehicles.get(i).getVehicleRegNumber();
+        }
+
+        model.addAttribute("optListRegNum", optListRegNum);
 
         return "actionPage";
     } // end_method

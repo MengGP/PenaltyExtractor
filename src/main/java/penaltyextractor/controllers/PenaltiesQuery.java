@@ -10,6 +10,10 @@ import penaltyextractor.dao.TopPenalty;
 
 import java.util.ArrayList;
 
+/*
+    Контроллер
+        отвечает за выдачу информации по штрафам
+ */
 @Controller
 public class PenaltiesQuery {
 
@@ -26,30 +30,24 @@ public class PenaltiesQuery {
         if ( (driverForPenaltyQuery.length() == 0) && (regNumForPenaltyQuery.length() == 0) )
             return "emptyResultPage";
 
+        ArrayList<Penalty> penalties;
+
         // если задан гос номер автомобиля - ищем по автомобилю
         // иначе ищем по водителю
         if ( regNumForPenaltyQuery.length() > 0 ) {
-            ArrayList<Penalty> penalties
-                    = (ArrayList<Penalty>) dbHelperSpringJDBC.readPenaltiesByRegNumber(regNumForPenaltyQuery);
-
-            // если результат запроса пустой - значит неверно задано условие
-            if ( penalties.size() == 0 )
-                return "emptyResultPage";
-
+            penalties = (ArrayList<Penalty>) dbHelperSpringJDBC.readPenaltiesByRegNumber(regNumForPenaltyQuery);
             model.addAttribute("regNumForPenaltyQuery", regNumForPenaltyQuery);
-            model.addAttribute("penalties", penalties);
         }
         else {
-            ArrayList<Penalty> penalties
-                    = (ArrayList<Penalty>) dbHelperSpringJDBC.readPenaltiesByDriver(driverForPenaltyQuery);
-
-            // если результат запроса пустой - значит неверно задано условие
-            if ( penalties.size() == 0 )
-                return "emptyResultPage";
-
+            penalties = (ArrayList<Penalty>) dbHelperSpringJDBC.readPenaltiesByDriver(driverForPenaltyQuery);
             model.addAttribute("driverForPenaltyQuery", driverForPenaltyQuery);
-            model.addAttribute("penalties", penalties);
         }
+
+        // если результат запроса пустой - значит неверно задано условие
+        if ( penalties.size() == 0 )
+            return "emptyResultPage";
+
+        model.addAttribute("penalties", penalties);
 
         return "penaltiesPage";
     } // end_method

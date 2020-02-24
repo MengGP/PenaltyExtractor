@@ -3,14 +3,18 @@ package penaltyextractor.boot;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import penaltyextractor.dao.dbHelperSpringJDBC;
 
-import java.util.HashMap;
+/*
+    Гланый класс проекта
+        - настройка и запуск Spring Boot сервлета
+        - первоначальное наполнение БД средствами Flyway
+ */
 
 @SpringBootApplication
 @ComponentScan( {
@@ -22,36 +26,27 @@ import java.util.HashMap;
 @PropertySource("classpath:/application.properties")
 public class PenaltyExtractorApp implements CommandLineRunner {
 
-    public static void main(String[] args) {
-        // SpringApplication.run(PenaltyExtractorApp.class, args);
-
-        HashMap<String,Object> props = new HashMap<>();
-        props.put("server.port",8077);
-
-        new SpringApplicationBuilder(PenaltyExtractorApp.class)
-                .properties(props)
-                .run(args);
-    } // end_main
-
-//    @Bean
-//    public static PropertySourcesPlaceholderConfigurer propertyConfigurer() {
-//        return new PropertySourcesPlaceholderConfigurer();
-//    }
+    // получем строку подключения к БД из файла properties для Flyway
+    @Value("${spring.datasource.url}")
+    String dbUrl;
 
     @Bean
     public dbHelperSpringJDBC dbHelperSpringJDBC() {
         return new dbHelperSpringJDBC();
     } // end_bean
 
+    // Запуск Spring Boot Application
+    public static void main(String[] args) {
+        SpringApplication.run(PenaltyExtractorApp.class, args);
+    } // end_main
+
+    // Задачи при старте
     @Override
     public void run(String... args) throws Exception {
         migrateDB();
     } // end_run
 
-    // получем строку подключения к БД из файла properties для Flyway
-    @Value("${spring.datasource.url}")
-    String dbUrl;
-
+    // запуск миграции БД из sql-скрипта средсвами Flyway
     private void migrateDB() {
         Flyway flyway = Flyway.configure().dataSource(
                 dbUrl,
@@ -60,6 +55,5 @@ public class PenaltyExtractorApp implements CommandLineRunner {
                 .load();
         flyway.migrate();
     } // end_method
-
 
 } // end_class

@@ -79,15 +79,4 @@ public class Penalty {
     }
     // --- end_setters_and_getters
 
-
-    @Override
-    public String toString() {
-        return getDate()
-                + getDriverName()
-                + getVehicleRegNumber()
-                + getVehicleMark()
-                + getVehicleModel()
-                + getPenaltyClause()
-                + getPenaltyCost();
-    }
 } // end_class

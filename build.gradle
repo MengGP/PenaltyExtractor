@@ -1,10 +1,7 @@
 plugins {
     id 'java'
-    // id 'java-library-distribution'
-    id 'com.github.onslip.gradle-one-jar' version '1.0.5'
+    // id 'com.github.onslip.gradle-one-jar' version '1.0.5'
     id 'org.springframework.boot' version '2.2.4.RELEASE'
-    // id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    // id 'org.flywaydb.flyway' version '6.2.4'
 }
 
 // group 'com.example'
@@ -18,31 +15,19 @@ repositories {
 }
 
 dependencies {
-    // compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.2.4.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.2.4.RELEASE'
-    // compile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.2.4.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.2.4.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '2.2.4.RELEASE', ext: 'pom'
-    // compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.2.4.RELEASE'
     compile group: 'org.springframework', name: 'spring-jdbc', version: '5.2.2.RELEASE'
     compile group: 'org.flywaydb', name: 'flyway-core', version: '6.2.4'
     compile group: 'com.h2database', name: 'h2', version: '1.4.200'
 
-
-    // compile group: 'org.springframework', name: 'spring-context', version: '5.2.3.RELEASE'
-
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-task awesomeFunJar(type: OneJar) {
-    // mainClass = 'penaltyextractor.'
-    // archiveName = 'jarWithMyName.jar'
-}
-
-// flyway {
-//     url = 'jdbc:h2:file:D:/Work/SoftDev/CBRF/PenaltyExtractor/testDB'
-//    user = 'test'
-//    password = 'test'
+// task awesomeFunJar(type: OneJar) {
+//     mainClass = 'penaltyextractor.boot.PenaltyExtractorApp'
+//     archiveName = 'PenaltyExtractorApp.jar'
 // }
 
 

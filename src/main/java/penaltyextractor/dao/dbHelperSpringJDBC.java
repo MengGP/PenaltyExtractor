@@ -8,6 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+/*
+    Класс
+        реализует логику работы с БД средствами Spring JDBC Template
+ */
 public class dbHelperSpringJDBC {
 
     @Autowired
@@ -158,6 +162,7 @@ public class dbHelperSpringJDBC {
         return penaltiesByDriver;
     }
 
+    // получаем ТОП выписываемых штрафов
     public List<TopPenalty> readTopPenalties(int penaltiesNumber) {
         String sqlQuery = "SELECT cnt, clause FROM " +
                     "PENALTY_CATALOG, " +
