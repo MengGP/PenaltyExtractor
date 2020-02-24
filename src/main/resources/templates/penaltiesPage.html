@@ -6,11 +6,14 @@
 </head>
 <body>
 
-<h1 th:inline="text">Выписаные штрафы согласно условиям поиска:</h1>
+<h1 th:inline="text">Выписанные штрафы согласно условиям поиска:</h1>
 
 <p>Поиск по:</p>
 <p th:text="${driverForPenaltyQuery}"/>
 <p th:text="${regNumForPenaltyQuery}"/>
+<form th:action="@{actionPage}">
+    <button>Назад</button>
+</form>
 
 <p>--------------------------------------------------------</p>
 
@@ -37,10 +40,6 @@
 </table>
 
 <p>--------------------------------------------------------</p>
-<form th:action="@{actionPage}">
-    <button>Назад</button>
-</form>
-
 
 </body>
 </html>

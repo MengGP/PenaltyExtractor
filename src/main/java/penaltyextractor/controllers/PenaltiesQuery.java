@@ -6,8 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import penaltyextractor.dao.Penalty;
-import penaltyextractor.dao.RegisteredVehicle;
-import penaltyextractor.dao.dbHelperSpringJDBC;
 
 import java.util.ArrayList;
 
@@ -28,17 +26,29 @@ public class PenaltiesQuery {
             return "emptyResultPage";
 
         // если задан гос номер автомобиля - ищем по автомобилю
+        // иначе ищем по водителю
         if ( regNumForPenaltyQuery.length() > 0 ) {
-
             ArrayList<Penalty> penalties
-                    = (ArrayList<Penalty>) dbHelperSpringJDBC.readPenaltyByRegNumber(regNumForPenaltyQuery);
-//            for (Penalty iter : penalties ) {
-//                System.out.println( iter.toString() );
-//            }
+                    = (ArrayList<Penalty>) dbHelperSpringJDBC.readPenaltiesByRegNumber(regNumForPenaltyQuery);
+
+            // если результат запроса пустой - значит неверно задано условие
+            if ( penalties.size() == 0 )
+                return "emptyResultPage";
+
             model.addAttribute("regNumForPenaltyQuery", regNumForPenaltyQuery);
             model.addAttribute("penalties", penalties);
         }
+        else {
+            ArrayList<Penalty> penalties
+                    = (ArrayList<Penalty>) dbHelperSpringJDBC.readPenaltiesByDriver(driverForPenaltyQuery);
 
+            // если результат запроса пустой - значит неверно задано условие
+            if ( penalties.size() == 0 )
+                return "emptyResultPage";
+
+            model.addAttribute("driverForPenaltyQuery", driverForPenaltyQuery);
+            model.addAttribute("penalties", penalties);
+        }
 
         return "penaltiesPage";
     } // end_method

@@ -16,7 +16,8 @@ public class dbHelperSpringJDBC {
     // получаем список всех водителей
     public List<Driver> readAllDrivers() {
         List<Driver> allDrivers = jdbcTemplate.query(
-                "SELECT * FROM DRIVERS",
+                "SELECT * FROM DRIVERS " +
+                "order by full_name",
                 new RowMapper<Driver>() {
                     @Override
                     public Driver mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -78,27 +79,21 @@ public class dbHelperSpringJDBC {
     } // end_method
 
     // получаем список штрафов по гос номеру
-    public List<Penalty> readPenaltyByRegNumber(String vehicleRegNumber) {
-        String sqlQuery = "SELECT date, full_name, vehicles_reg_number,mark, model, clause, cost "
-                + "FROM "
-                + "(SELECT * FROM ISSUED_PENALTIES "
-                + "where REGISTERED_VEHICLE_ID IN "
-                + "(SELECT id FROM REGISTERED_VEHICLES "
-                + "where VEHICLES_REG_NUMBER   =? ) "
-		        + ") as filtered_penalties, "
-                + "registered_vehicles, "
-                + "PENALTY_CATALOG, "
-                + "DRIVERS, "
-                + "vehicles "
-                + "WHERE "
-                + "filtered_penalties.registered_vehicle_id = registered_vehicles.id "
-                + "AND "
-                + "filtered_penalties.PENALTY_ID = PENALTY_CATALOG.id "
-                + "AND "
-                + "DRIVERS.id IN (SELECT driver_id FROM REGISTERED_VEHICLES where id = filtered_penalties.registered_vehicle_id) "
-                + "AND "
-                + "VEHICLES.id IN (SELECT vehicle_id FROM REGISTERED_VEHICLES where id = filtered_penalties.registered_vehicle_id) "
-                + "order by date desc; ";
+    public List<Penalty> readPenaltiesByRegNumber(String vehicleRegNumber) {
+        String sqlQuery = "SELECT date, full_name, vehicles_reg_number,mark, model, clause, cost FROM " +
+                    "(SELECT * FROM ISSUED_PENALTIES where REGISTERED_VEHICLE_ID IN " +
+                        "(SELECT id FROM REGISTERED_VEHICLES where VEHICLES_REG_NUMBER   =? ) " +
+		            ") as filtered_penalties, " +
+                    "registered_vehicles, " +
+                    "PENALTY_CATALOG, " +
+                    "DRIVERS, " +
+                    "vehicles " +
+                "WHERE " +
+                    "filtered_penalties.registered_vehicle_id = registered_vehicles.id AND " +
+                    "filtered_penalties.PENALTY_ID = PENALTY_CATALOG.id AND " +
+                    "DRIVERS.id IN (SELECT driver_id FROM REGISTERED_VEHICLES where id = filtered_penalties.registered_vehicle_id) AND " +
+                    "VEHICLES.id IN (SELECT vehicle_id FROM REGISTERED_VEHICLES where id = filtered_penalties.registered_vehicle_id) " +
+                "order by date desc; ";
 
         List<Penalty> penaltiesByRegNum = jdbcTemplate.query(
                 sqlQuery,
@@ -121,5 +116,46 @@ public class dbHelperSpringJDBC {
 
         return penaltiesByRegNum;
     } // end_method
+
+    // получаем список штрафов по водителю
+    public List<Penalty> readPenaltiesByDriver(String driverFullName) {
+        String sqlQuery = "SELECT date, full_name, vehicles_reg_number,mark, model, clause, cost FROM "+
+                    "(SELECT * FROM ISSUED_PENALTIES where REGISTERED_VEHICLE_ID IN " +
+                        "(SELECT id FROM REGISTERED_VEHICLES where driver_id IN " +
+                            "(SELECT id FROM DRIVERS where FULL_NAME =? ) " +
+                        ") " +
+		            " ) as filtered_penalties, " +
+                    "registered_vehicles, " +
+                    "PENALTY_CATALOG, " +
+                    "DRIVERS, "+
+                    "vehicles "+
+                "WHERE " +
+                    "filtered_penalties.registered_vehicle_id = registered_vehicles.id AND " +
+                    "filtered_penalties.PENALTY_ID = PENALTY_CATALOG.id AND " +
+                    "DRIVERS.id IN (SELECT driver_id FROM REGISTERED_VEHICLES where id = filtered_penalties.registered_vehicle_id) AND " +
+                    "VEHICLES.id IN (SELECT vehicle_id FROM REGISTERED_VEHICLES where id = filtered_penalties.registered_vehicle_id)" +
+                "order by date desc;";
+
+        List<Penalty> penaltiesByDriver = jdbcTemplate.query(
+                sqlQuery,
+                new RowMapper<Penalty>() {
+                    @Override
+                    public Penalty mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        return new Penalty(
+                                rs.getString("date"),
+                                rs.getString("full_name"),
+                                rs.getString("vehicles_reg_number"),
+                                rs.getString("mark"),
+                                rs.getString("model"),
+                                rs.getString("clause"),
+                                rs.getInt("cost")
+                        );
+                    }
+                },
+                driverFullName
+        );
+
+        return penaltiesByDriver;
+    }
 
 } // end_class
