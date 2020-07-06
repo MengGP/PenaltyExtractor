@@ -70,8 +70,9 @@ SELECT date, full_name, vehicles_reg_number,mark, model, clause, cost FROM
 		VEHICLES.id IN (SELECT vehicle_id FROM REGISTERED_VEHICLES where id = filtered_penalties.registered_vehicle_id)
 	order by date desc;
 
+
 -- 5 наиболее частых штрафов
-	
+
 --- посчитанные penalty_id
 SELECT PENALTY_ID , COUNT(PENALTY_ID) as cnt  FROM ISSUED_PENALTIES 
 group by PENALTY_ID;
@@ -82,12 +83,13 @@ group by PENALTY_ID
 order by cnt desc limit 5;
 
 -- итоговый 
-SELECT CLAUSE, cnt 
-	FROM
+SELECT cnt, clause FROM
 		PENALTY_CATALOG,
-		(SELECT PENALTY_ID , COUNT(PENALTY_ID) as cnt  FROM ISSUED_PENALTIES 
-		 group by PENALTY_ID
-		 order by cnt desc limit 5) as top_penalties 
+		(SELECT PENALTY_ID, COUNT(PENALTY_ID) as cnt FROM
+			ISSUED_PENALTIES 
+			group by PENALTY_ID 
+			order by cnt desc limit ?
+		) as top_penalties 
 	where
 		PENALTY_CATALOG.id = top_penalties.PENALTY_ID
 	order by top_penalties.cnt desc;
